@@ -60,7 +60,7 @@ export const getMe = createAsyncThunk(
     async () => {
         try {
             const {data} = await axios.get('/auth/me');
-
+            console.log('data from server: ', data)
             return data;
         } catch (e) {
             console.log('Error: ', e)
@@ -139,6 +139,13 @@ export const authSlice = createSlice({
             //action.payload? - ?if exist
             state.user = action.payload?.user;
             state.token = action.payload?.token;
+
+            //test fix bug with saving autorization
+            if (!state.token) {
+              const localStorageToken = window.localStorage.getItem('token')
+                state.token = localStorageToken;
+            }
+
         },
 
         [getMe.rejected] : (state, action) => {
@@ -152,7 +159,5 @@ export const authSlice = createSlice({
 
 //if token exist for refresh page
 export const checkIsAuth = (state) => Boolean(state.auth.token);
-
 export const {logout} = authSlice.actions
-
 export default authSlice.reducer

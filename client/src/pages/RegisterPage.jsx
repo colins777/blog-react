@@ -1,7 +1,7 @@
 import React, {Component, useState, useEffect} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {registerUser} from "../redux/features/authSlice";
+import {checkIsAuth, registerUser} from "../redux/features/authSlice";
 import {toast} from 'react-toastify'
 
 export const RegisterPage = () => {
@@ -13,6 +13,8 @@ export const RegisterPage = () => {
 
     //for changing state
     const dispatch = useDispatch();
+    const isAuth = useSelector(checkIsAuth);
+    const navigate = useNavigate();
 
     //show messages (toast library)
     useEffect(() => {
@@ -20,8 +22,9 @@ export const RegisterPage = () => {
             toast(status)
         }
 
+        if(isAuth) navigate('/')
         //status - property is state
-    }, [status])
+    }, [status, isAuth, navigate])
 
     const handleSubmit = () => {
         console.log('test!')
